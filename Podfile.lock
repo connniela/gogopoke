@@ -1,0 +1,20 @@
+PODS:
+  - PokemonAPI (6.0.2)
+  - SnapKit (5.6.0)
+
+DEPENDENCIES:
+  - PokemonAPI
+  - SnapKit
+
+SPEC REPOS:
+  trunk:
+    - PokemonAPI
+    - SnapKit
+
+SPEC CHECKSUMS:
+  PokemonAPI: bff9656c1825288e7f028b415ce6276122ad4c6a
+  SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+
+PODFILE CHECKSUM: 86881a4db1a1e196868c74fe351e93e0df763951
+
+COCOAPODS: 1.14.2
