@@ -7,8 +7,9 @@
 
 import UIKit
 import SnapKit
+import os
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
 
     override func loadView() {
         super.loadView()
@@ -62,11 +63,13 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        GogoLogger.instance.logger.info("Hi Pokémon Trainer")
     }
 }
 
 // MARK: Actions
-extension ViewController {
+extension MainViewController {
     
     @objc private func pokemonListButtonTapped() {
         let vc = PokemonListViewController()

@@ -133,6 +133,8 @@ class TypePokemonViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        GogoLogger.instance.logger.info("⚡Open type pokemon")
+        
         pickerView.dataSource = self
         pickerView.delegate = self
         

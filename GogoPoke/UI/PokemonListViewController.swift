@@ -130,6 +130,8 @@ class PokemonListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        GogoLogger.instance.logger.info("🎒Open Pokémon list")
+        
         collectionView.register(PokemonListCell.self, forCellWithReuseIdentifier: PokemonListCell.identifier)
         collectionView.dataSource = self
         collectionView.delegate = self
