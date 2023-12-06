@@ -1,4 +1,4 @@
-# GogoPoke - Pokemon Utility App
+# GogoPoke - Pokémon Utility App
 GogoPoke is an iOS app written in Swift that serves as a handy tool for Pokémon enthusiasts. It offers various features, including viewing Pokémon lists, accessing detailed Pokémon information, marking owned Pokémon, and displaying a Type Matchup Chart. Additionally, users can filter Pokémon based on selected types.
 
 # Screenshots
@@ -11,15 +11,15 @@ GogoPoke is an iOS app written in Swift that serves as a handy tool for Pokémon
 
 
 # Features
-#### Pokemon List
+- ##### Pokémon List
 View a comprehensive list of Pokémon with details such as name, type, and image.
-#### Pokemon Details
+- ##### Pokémon Details
 Access detailed information about each Pokémon, including base stats, evolution chain, and more.
-#### Owned Pokemon
-Mark your owned Pokemon and keep track of them easily.
-#### Type Matchup Chart
+- ##### Owned Pokémon
+Mark your owned Pokémon and keep track of them easily.
+- ##### Type Matchup Chart
 Explore the Type Matchup Chart to understand the strengths and weaknesses of different Pokémon types.
-#### Filter by Type
+- ##### Filter by Type
 Filter Pokémon based on selected types to find Pokémon with specific characteristics.
 
 # Installation
@@ -31,16 +31,22 @@ This project uses Cocoapods for dependency management. Make sure you have Cocoap
 Open the .xcworkspace file to launch the project.
 
 #### Dependencies
-##### PokemonAPI
-Used for fetching Pokemon data.
-##### SnapKit
-Employed for programmatic UI layout using SnapKit.
+-  [PokemonAPI](https://github.com/kinkofer/PokemonAPI "PokemonAPI"): Used for fetching Pokemon data.
+-  [SnapKit](https://github.com/SnapKit/SnapKit "SnapKit"): Employed for programmatic UI layout using SnapKit.
 
 # Architecture
 The app follows the MVVM (Model-View-ViewModel) architecture for a clear separation of concerns.
 
 # UI Layout
-The entire user interface is constructed using SnapKit, avoiding the use of Storyboards for a more programmatic approach.
+The entire user interface is constructed using [SnapKit](https://github.com/SnapKit/SnapKit "SnapKit"), avoiding the use of Storyboards for a more programmatic approach.
+
+# Testing
+GogoPoke includes comprehensive testing:
+
+- Unit Tests: Ensure the correctness of individual units of code.
+- UI Tests: Validate the behavior and appearance of the app's user interface.
+
+To run the tests, select the desired scheme and use Xcode's testing functionality.
 
 # Usage
 Explore the various features of GogoPoke by navigating through the intuitive user interface. Enjoy a seamless experience as you delve into the fascinating world of Pokémon!
@@ -48,7 +54,7 @@ Explore the various features of GogoPoke by navigating through the intuitive use
 Feel free to contribute to the project and enhance its capabilities further.
 
 # License
-This project is licensed under the MIT License. See LICENSE for details.
+This project is licensed under the MIT License. See [LICENSE](https://github.com/connniela/gogopoke/blob/main/LICENSE "LICENSE") for details.
 
 Happy Pokémon exploring with GogoPoke!
 
