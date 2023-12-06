@@ -48,16 +48,41 @@ class MainViewController: UIViewController {
         typePokemonButton.addTarget(self, action: #selector(typePokemonButtonTapped), for: .touchUpInside)
         typePokemonButton.accessibilityIdentifier = "typePokemonButton"
         
-        let stackView = UIStackView(arrangedSubviews: [gogoPokeLabel, pokemonListButton, typeChartButton, typePokemonButton])
+        let versionLabel = UILabel()
+        versionLabel.textColor = .swablu700Color
+        versionLabel.font = .boldSystemFont(ofSize: 10)
+        versionLabel.textAlignment = .center
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        let build = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String
+        if let version = version, let build = build {
+            versionLabel.text = String(format: "Version %@.%@", version, build)
+        }
+        
+        let creatorLabel = UILabel()
+        creatorLabel.textColor = .swablu700Color
+        creatorLabel.font = .boldSystemFont(ofSize: 10)
+        creatorLabel.text = "Connie"
+        
+        let creatorImage = UIImageView(image: UIImage(named: "connie"))
+        creatorImage.layer.cornerRadius = 10
+        creatorImage.clipsToBounds = true
+        
+        let stackView = UIStackView(arrangedSubviews: [gogoPokeLabel, pokemonListButton, typeChartButton, typePokemonButton, versionLabel, creatorLabel, creatorImage])
         stackView.axis = .vertical
         stackView.spacing = 60
         stackView.alignment = .center
+        stackView.setCustomSpacing(4, after: versionLabel)
+        stackView.setCustomSpacing(4, after: creatorLabel)
         
         view.addSubview(stackView)
         
         stackView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.greaterThanOrEqualTo(view.safeAreaLayoutGuide.snp.top).inset(24)
+        }
+        
+        creatorImage.snp.makeConstraints { make in
+            make.size.equalTo(20)
         }
     }
     
