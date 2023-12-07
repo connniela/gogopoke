@@ -93,7 +93,6 @@ class TypeManager: NSObject {
                     }
                     else {
                         TypeManager.instance.loadingTypeInfos = false
-                        TypeManager.instance.typeInfos.sort { $0.id < $1.id }
                         callback?(nil)
                         
                         DispatchQueue.main.async {
@@ -123,9 +122,11 @@ class TypeManager: NSObject {
             return
         }
         
-        var i: Int = 0
+        let dispathGroup = DispatchGroup()
         var typeInfos: [TypeInfo] = []
         for typeResource in list {
+            dispathGroup.enter()
+            
             PokemonAPI().resourceService.fetch(typeResource) { result in
                 
                 switch result {
@@ -134,12 +135,7 @@ class TypeManager: NSObject {
                         
                         if let savedType = loadTypeInfoInstance(id: id) {
                             typeInfos.append(savedType)
-                            
-                            i += 1
-                            if i == list.count {
-                                GogoLogger.instance.logger.info("fetching type infos finished")
-                                callback(typeInfos)
-                            }
+                            dispathGroup.leave()
                             return
                         }
                         
@@ -150,32 +146,25 @@ class TypeManager: NSObject {
                             typeInfo.typeNames = typeNames
                             
                             saveTypeInfosInstance(typeInfos: [typeInfo])
-                            
-                            i += 1
-                            if i == list.count {
-                                GogoLogger.instance.logger.info("fetching type infos finished")
-                                callback(typeInfos)
-                            }
+                            dispathGroup.leave()
                         }
                     }
                     else {
                         GogoLogger.instance.logger.error("❗fetching type info failure: no pokemon with type")
-                        i += 1
-                        if i == list.count {
-                            GogoLogger.instance.logger.info("fetching type infos finished")
-                            callback(typeInfos)
-                        }
+                        dispathGroup.leave()
                     }
                     
                 case .failure(let error):
                     GogoLogger.instance.logger.error("❗fetching type info failure: \(error)")
-                    i += 1
-                    if i == list.count {
-                        GogoLogger.instance.logger.info("fetching type infos finished")
-                        callback(typeInfos)
-                    }
+                    dispathGroup.leave()
                 }
             }
+        }
+        
+        dispathGroup.notify(queue: .main) {
+            typeInfos.sort { $0.id < $1.id }
+            GogoLogger.instance.logger.info("fetching type infos finished")
+            callback(typeInfos)
         }
     }
     

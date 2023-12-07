@@ -188,9 +188,11 @@ class PokeManager: NSObject {
             return
         }
         
-        var i: Int = 0
+        let dispathGroup = DispatchGroup()
         var pokemonInfos: [PokemonInfo] = []
         for pokemonResource in list {
+            dispathGroup.enter()
+            
             PokemonAPI().resourceService.fetch(pokemonResource) { result in
                 
                 switch result {
@@ -199,13 +201,7 @@ class PokeManager: NSObject {
                         
                         if let savedPokemon = loadPokemonInfoInstance(id: id) {
                             pokemonInfos.append(savedPokemon)
-                            
-                            i += 1
-                            if i == list.count {
-                                pokemonInfos.sort { $0.id < $1.id }
-                                GogoLogger.instance.logger.info("fetching pokemon infos finished")
-                                callback(pokemonInfos)
-                            }
+                            dispathGroup.leave()
                             return
                         }
                         
@@ -220,35 +216,25 @@ class PokeManager: NSObject {
                                     pokemonInfo.names = pokemonNames
                                     
                                     savePokemonInfosInstance(pokemonInfos: [pokemonInfo])
-                                    
-                                    i += 1
-                                    if i == list.count {
-                                        pokemonInfos.sort { $0.id < $1.id }
-                                        GogoLogger.instance.logger.info("fetching pokemon infos finished")
-                                        callback(pokemonInfos)
-                                    }
+                                    dispathGroup.leave()
                                 }
                             }
                         }
                     }
                     else {
-                        i += 1
-                        if i == list.count {
-                            pokemonInfos.sort { $0.id < $1.id }
-                            GogoLogger.instance.logger.info("fetching pokemon infos finished")
-                            callback(pokemonInfos)
-                        }
+                        dispathGroup.leave()
                     }
                 case .failure(let error):
                     GogoLogger.instance.logger.error("❗fetching pokemon info failure: \(error)")
-                    i += 1
-                    if i == list.count {
-                        pokemonInfos.sort { $0.id < $1.id }
-                        GogoLogger.instance.logger.info("fetching pokemon infos finished")
-                        callback(pokemonInfos)
-                    }
+                    dispathGroup.leave()
                 }
             }
+        }
+        
+        dispathGroup.notify(queue: .main) {
+            pokemonInfos.sort { $0.id < $1.id }
+            GogoLogger.instance.logger.info("fetching pokemon infos finished")
+            callback(pokemonInfos)
         }
     }
     
@@ -261,9 +247,11 @@ class PokeManager: NSObject {
             return
         }
         
-        var i: Int = 0
+        let dispathGroup = DispatchGroup()
         var typeInfos: [TypeInfo] = []
         for pokemonType in pokemonTypes {
+            dispathGroup.enter()
+            
             if let typeResource = pokemonType.type {
                 
                 PokemonAPI().resourceService.fetch(typeResource) { result in
@@ -274,11 +262,7 @@ class PokeManager: NSObject {
                             
                             if let savedType = TypeManager.loadTypeInfoInstance(id: id) {
                                 typeInfos.append(savedType)
-                                
-                                i += 1
-                                if i == pokemonTypes.count {
-                                    callback(typeInfos)
-                                }
+                                dispathGroup.leave()
                                 return
                             }
                             
@@ -287,35 +271,26 @@ class PokeManager: NSObject {
                             
                             fetchNames(names: type.names ?? [], source: "type") { typeNames in
                                 typeInfo.typeNames = typeNames
-                                
-                                i += 1
-                                if i == pokemonTypes.count {
-                                    callback(typeInfos)
-                                }
+                                dispathGroup.leave()
                             }
                         }
                         else {
-                            i += 1
-                            if i == pokemonTypes.count {
-                                callback(typeInfos)
-                            }
+                            dispathGroup.leave()
                         }
                         
                     case .failure(let error):
                         GogoLogger.instance.logger.error("❗fetching pokemon type info failure: \(error)")
-                        i += 1
-                        if i == pokemonTypes.count {
-                            callback(typeInfos)
-                        }
+                        dispathGroup.leave()
                     }
                 }
             }
             else {
-                i += 1
-                if i == pokemonTypes.count {
-                    callback(typeInfos)
-                }
+                dispathGroup.leave()
             }
+        }
+        
+        dispathGroup.notify(queue: .main) {
+            callback(typeInfos)
         }
     }
     
@@ -328,13 +303,13 @@ class PokeManager: NSObject {
             return
         }
         
-        var i: Int = 0
+        let dispathGroup = DispatchGroup()
         var typeNames: [String: String] = [:]
         for name in names {
+            dispathGroup.enter()
+            
             if let languageResource = name.language {
                 PokemonAPI().resourceService.fetch(languageResource) { result in
-                    
-                    i += 1
                     
                     switch result {
                     case .success(let language):
@@ -346,17 +321,16 @@ class PokeManager: NSObject {
                         GogoLogger.instance.logger.error("❗fetching \(source) names failure: \(error)")
                     }
                     
-                    if i == names.count {
-                        callback(typeNames)
-                    }
+                    dispathGroup.leave()
                 }
             }
             else {
-                i += 1
-                if i == names.count {
-                    callback(typeNames)
-                }
+                dispathGroup.leave()
             }
+        }
+        
+        dispathGroup.notify(queue: .main) {
+            callback(typeNames)
         }
     }
     
@@ -474,9 +448,11 @@ class PokeManager: NSObject {
             return
         }
         
-        var i: Int = 0
+        let dispathGroup = DispatchGroup()
         var statInfos: [StatInfo] = []
         for stat in stats {
+            dispathGroup.enter()
+            
             if let statResource = stat.stat {
                 PokemonAPI().resourceService.fetch(statResource) { result in
                     
@@ -487,28 +463,22 @@ class PokeManager: NSObject {
                         
                         fetchNames(names: pokemonStat.names ?? [], source: "stat") { statNames in
                             statInfo.statNames = statNames
-                            
-                            i += 1
-                            if i == stats.count {
-                                callback(statInfos)
-                            }
+                            dispathGroup.leave()
                         }
                         
                     case .failure(let error):
                         GogoLogger.instance.logger.error("❗fetching pokemon stats failure: \(error)")
-                        i += 1
-                        if i == stats.count {
-                            callback(statInfos)
-                        }
+                        dispathGroup.leave()
                     }
                 }
             }
             else {
-                i += 1
-                if i == stats.count {
-                    callback(statInfos)
-                }
+                dispathGroup.leave()
             }
+        }
+        
+        dispathGroup.notify(queue: .main) {
+            callback(statInfos)
         }
     }
 }
