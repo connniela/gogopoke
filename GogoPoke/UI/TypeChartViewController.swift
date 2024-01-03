@@ -149,7 +149,7 @@ class TypeChartViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        GogoLogger.instance.logger.info("⚔️Open type chart")
+        GogoLogger.logger.info("⚔️Open type chart")
         
         pickerView.dataSource = self
         pickerView.delegate = self

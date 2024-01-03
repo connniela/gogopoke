@@ -10,7 +10,5 @@ import os
 
 class GogoLogger: NSObject {
     
-    static let instance = GogoLogger()
-    
-    let logger = Logger(subsystem: "connie.GogoPoke", category: "GogoPoke")
+    static let logger = Logger(subsystem: "connie.GogoPoke", category: "GogoPoke")
 }

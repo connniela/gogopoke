@@ -35,7 +35,7 @@ class PokeManager: NSObject {
     
     // Save my pokemon id to UserDefaults
     static func addMyPokemonId(pokemonInfo: PokemonInfo) {
-        GogoLogger.instance.logger.info("save my pokemon id to UserDefaults, id: \(pokemonInfo.id)")
+        GogoLogger.logger.info("save my pokemon id to UserDefaults, id: \(pokemonInfo.id)")
         
         var list = UserDefaults.standard.array(forKey: MyPokemonIdListKey) as? [Int] ?? []
         if list.firstIndex(of: pokemonInfo.id) != nil {
@@ -51,12 +51,12 @@ class PokeManager: NSObject {
         
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: MyPokemonListNeedUpdateNotification), object: nil, userInfo: nil)
         
-        GogoLogger.instance.logger.info("my pokemon count: \(PokeManager.instance.myPokemonInfos.count)")
+        GogoLogger.logger.info("my pokemon count: \(PokeManager.instance.myPokemonInfos.count)")
     }
     
     // Remove my pokemon id from UserDefaults
     static func removeMyPokemonId(pokemonInfo: PokemonInfo) {
-        GogoLogger.instance.logger.info("remove my pokemon id from UserDefaults, id: \(pokemonInfo.id)")
+        GogoLogger.logger.info("remove my pokemon id from UserDefaults, id: \(pokemonInfo.id)")
         
         var list = UserDefaults.standard.array(forKey: MyPokemonIdListKey) as? [Int] ?? []
         if let indexToRemove = list.firstIndex(of: pokemonInfo.id) {
@@ -72,13 +72,13 @@ class PokeManager: NSObject {
             }
         }
         
-        GogoLogger.instance.logger.info("my pokemon count: \(PokeManager.instance.myPokemonInfos.count)")
+        GogoLogger.logger.info("my pokemon count: \(PokeManager.instance.myPokemonInfos.count)")
     }
     
     // Save pokemon infos to UserDefaults
     static func savePokemonInfosInstance(pokemonInfos: [PokemonInfo]) {
         for pokemonInfo in pokemonInfos {
-            GogoLogger.instance.logger.info("save pokemon info to UserDefaults, id: \(pokemonInfo.id)")
+            GogoLogger.logger.info("save pokemon info to UserDefaults, id: \(pokemonInfo.id)")
             
             let key = keyForPokemonInfo(id: pokemonInfo.id)
             
@@ -93,14 +93,14 @@ class PokeManager: NSObject {
                 }
             }
             catch {
-                GogoLogger.instance.logger.error("❗JSON encoding error: \(error.localizedDescription)")
+                GogoLogger.logger.error("❗JSON encoding error: \(error.localizedDescription)")
             }
         }
     }
     
     // Get pokemon info from UserDefaults by id
     static func loadPokemonInfoInstance(id: Int) -> PokemonInfo? {
-        GogoLogger.instance.logger.info("get pokemon info from UserDefaults, id: \(id)")
+        GogoLogger.logger.info("get pokemon info from UserDefaults, id: \(id)")
         
         let key = keyForPokemonInfo(id: id)
         if let jsonString = UserDefaults.standard.string(forKey: key) {
@@ -111,7 +111,7 @@ class PokeManager: NSObject {
                     return decodedPokemon
                 }
                 catch {
-                    GogoLogger.instance.logger.error("❗JSON encoding error: \(error.localizedDescription)")
+                    GogoLogger.logger.error("❗JSON encoding error: \(error.localizedDescription)")
                 }
             }
         }
@@ -124,10 +124,10 @@ class PokeManager: NSObject {
     
     // Fetching my pokemon
     static func fetchMyPokemonList(callback: @escaping (() -> Void)) {
-        GogoLogger.instance.logger.info("fetching my pokemon")
+        GogoLogger.logger.info("fetching my pokemon")
         
         if !PokeManager.instance.myPokemonInfos.isEmpty {
-            GogoLogger.instance.logger.info("my pokemon count: \(PokeManager.instance.myPokemonInfos.count)")
+            GogoLogger.logger.info("my pokemon count: \(PokeManager.instance.myPokemonInfos.count)")
             callback()
             return
         }
@@ -139,7 +139,7 @@ class PokeManager: NSObject {
             }
         }
         PokeManager.instance.myPokemonInfos.sort { $0.id < $1.id }
-        GogoLogger.instance.logger.info("my pokemon count: \(PokeManager.instance.myPokemonInfos.count)")
+        GogoLogger.logger.info("my pokemon count: \(PokeManager.instance.myPokemonInfos.count)")
         callback()
     }
     
@@ -151,19 +151,19 @@ class PokeManager: NSObject {
             PokeManager.instance.pokemonInfos.removeAll()
             PokeManager.instance.continuationKey = nil
             
-            GogoLogger.instance.logger.info("fetching pokemon list, page: 0")
+            GogoLogger.logger.info("fetching pokemon list, page: 0")
         }
         else if let continuationKey = PokeManager.instance.continuationKey {
             paginationState = .continuing(continuationKey, .next)
             
-            GogoLogger.instance.logger.info("fetching pokemon list, page: \(continuationKey.currentPage)")
+            GogoLogger.logger.info("fetching pokemon list, page: \(continuationKey.currentPage)")
         }
         
         PokemonAPI().pokemonService.fetchPokemonList(paginationState: paginationState) { result in
             
             switch result {
             case .success(let pagedObject):
-                GogoLogger.instance.logger.info("fetching pokemon list success")
+                GogoLogger.logger.info("fetching pokemon list success")
                 
                 PokeManager.instance.continuationKey = pagedObject
                 
@@ -172,7 +172,7 @@ class PokeManager: NSObject {
                     callback(nil)
                 }
             case .failure(let error):
-                GogoLogger.instance.logger.error("❗fetching pokemon list failure: \(error)")
+                GogoLogger.logger.error("❗fetching pokemon list failure: \(error)")
                 callback(error)
             }
         }
@@ -180,11 +180,11 @@ class PokeManager: NSObject {
     
     // Fetching pokemon infos by paged results
     static func fetchPokemonInfo(list: [PKMAPIResource<PKMPokemon>]?, list2: [PKMNamedAPIResource<PKMPokemon>]? = nil, callback: @escaping (([PokemonInfo]) -> Void)) {
-        GogoLogger.instance.logger.info("fetching pokemon infos, count: \((list ?? list2)?.count ?? 0)")
+        GogoLogger.logger.info("fetching pokemon infos, count: \((list ?? list2)?.count ?? 0)")
         
         guard let list = list ?? list2, !list.isEmpty else {
             callback([])
-            GogoLogger.instance.logger.info("fetching pokemon infos finished")
+            GogoLogger.logger.info("fetching pokemon infos finished")
             return
         }
         
@@ -225,7 +225,7 @@ class PokeManager: NSObject {
                         dispathGroup.leave()
                     }
                 case .failure(let error):
-                    GogoLogger.instance.logger.error("❗fetching pokemon info failure: \(error)")
+                    GogoLogger.logger.error("❗fetching pokemon info failure: \(error)")
                     dispathGroup.leave()
                 }
             }
@@ -233,14 +233,14 @@ class PokeManager: NSObject {
         
         dispathGroup.notify(queue: .main) {
             pokemonInfos.sort { $0.id < $1.id }
-            GogoLogger.instance.logger.info("fetching pokemon infos finished")
+            GogoLogger.logger.info("fetching pokemon infos finished")
             callback(pokemonInfos)
         }
     }
     
     // Fetching pokemon types info
     private static func fetchPokemonTypes(pokemonTypes: [PKMPokemonType], callback: @escaping (([TypeInfo]) -> Void)) {
-        GogoLogger.instance.logger.info("fetching pokemon type info, count: \(pokemonTypes.count)")
+        GogoLogger.logger.info("fetching pokemon type info, count: \(pokemonTypes.count)")
         
         guard !pokemonTypes.isEmpty else {
             callback([])
@@ -279,7 +279,7 @@ class PokeManager: NSObject {
                         }
                         
                     case .failure(let error):
-                        GogoLogger.instance.logger.error("❗fetching pokemon type info failure: \(error)")
+                        GogoLogger.logger.error("❗fetching pokemon type info failure: \(error)")
                         dispathGroup.leave()
                     }
                 }
@@ -296,7 +296,7 @@ class PokeManager: NSObject {
     
     // Fetching names
     static func fetchNames(names: [PKMName], source: String, callback: @escaping (([String: String]) -> Void)) {
-        GogoLogger.instance.logger.info("fetching \(source) names, count: \(names.count)")
+        GogoLogger.logger.info("fetching \(source) names, count: \(names.count)")
         
         guard !names.isEmpty else {
             callback([:])
@@ -318,7 +318,7 @@ class PokeManager: NSObject {
                         }
                         
                     case .failure(let error):
-                        GogoLogger.instance.logger.error("❗fetching \(source) names failure: \(error)")
+                        GogoLogger.logger.error("❗fetching \(source) names failure: \(error)")
                     }
                     
                     dispathGroup.leave()
@@ -336,14 +336,14 @@ class PokeManager: NSObject {
     
     // Fetching pokemon info by id
     static func fetchPokemon(id: Int, callback: @escaping ((PKMPokemon?, PokemonInfo?, Error?) -> Void)) {
-        GogoLogger.instance.logger.info("fetching pokemon info, id: \(id)")
+        GogoLogger.logger.info("fetching pokemon info, id: \(id)")
         
         PokemonAPI().pokemonService.fetchPokemon(id) { result in
             
             switch result {
             case .success(let pokemon):
                 if let id = pokemon.id {
-                    GogoLogger.instance.logger.info("fetching pokemon info success")
+                    GogoLogger.logger.info("fetching pokemon info success")
                     
                     if let savedPokemon = loadPokemonInfoInstance(id: id) {
                         callback(pokemon, savedPokemon, nil)
@@ -366,12 +366,12 @@ class PokeManager: NSObject {
                     }
                 }
                 else {
-                    GogoLogger.instance.logger.error("❗fetching pokemon info failure: id is nil")
+                    GogoLogger.logger.error("❗fetching pokemon info failure: id is nil")
                     callback(nil, nil, nil)
                 }
                 
             case .failure(let error):
-                GogoLogger.instance.logger.error("❗fetching pokemon info failure: \(error)")
+                GogoLogger.logger.error("❗fetching pokemon info failure: \(error)")
                 callback(nil, nil, error)
             }
         }
@@ -379,7 +379,7 @@ class PokeManager: NSObject {
     
     // Fetching pokemon species
     static func fetchPokemonSpecies(species: PKMNamedAPIResource<PKMPokemonSpecies>?, callback: @escaping ((PKMPokemonSpecies?, Error?) -> Void)) {
-        GogoLogger.instance.logger.info("fetching pokemon species")
+        GogoLogger.logger.info("fetching pokemon species")
         
         guard let speciesResource = species else {
             callback(nil, nil)
@@ -389,11 +389,11 @@ class PokeManager: NSObject {
         PokemonAPI().resourceService.fetch(speciesResource) { result in
             switch result {
             case .success(let species):
-                GogoLogger.instance.logger.info("fetching pokemon species success")
+                GogoLogger.logger.info("fetching pokemon species success")
                 callback(species, nil)
                 
             case .failure(let error):
-                GogoLogger.instance.logger.error("❗fetching pokemon species failure: \(error)")
+                GogoLogger.logger.error("❗fetching pokemon species failure: \(error)")
                 callback(nil, error)
             }
         }
@@ -401,7 +401,7 @@ class PokeManager: NSObject {
     
     // Fetching pokemon evolution chain
     static func fetchEvolutionChain(evolutionChain: PKMAPIResource<PKMEvolutionChain>?, callback: @escaping ((PKMClainLink?, Error?) -> Void)) {
-        GogoLogger.instance.logger.info("fetching pokemon evolution chain")
+        GogoLogger.logger.info("fetching pokemon evolution chain")
         
         guard let evolutionChainResource = evolutionChain else {
             callback(nil, nil)
@@ -411,11 +411,11 @@ class PokeManager: NSObject {
         PokemonAPI().resourceService.fetch(evolutionChainResource) { result in
             switch result {
             case .success(let evolutionChain):
-                GogoLogger.instance.logger.info("fetching pokemon evolution chain success")
+                GogoLogger.logger.info("fetching pokemon evolution chain success")
                 callback(evolutionChain.chain, nil)
                 
             case .failure(let error):
-                GogoLogger.instance.logger.error("❗fetching pokemon evolution chain failure: \(error)")
+                GogoLogger.logger.error("❗fetching pokemon evolution chain failure: \(error)")
                 callback(nil, error)
             }
         }
@@ -441,7 +441,7 @@ class PokeManager: NSObject {
     
     // Fetching pokemon stats
     static func fetchPokemonStats(stats: [PKMPokemonStat], callback: @escaping (([StatInfo]) -> Void)) {
-        GogoLogger.instance.logger.info("fetching pokemon stats, count: \(stats.count)")
+        GogoLogger.logger.info("fetching pokemon stats, count: \(stats.count)")
         
         guard !stats.isEmpty else {
             callback([])
@@ -467,7 +467,7 @@ class PokeManager: NSObject {
                         }
                         
                     case .failure(let error):
-                        GogoLogger.instance.logger.error("❗fetching pokemon stats failure: \(error)")
+                        GogoLogger.logger.error("❗fetching pokemon stats failure: \(error)")
                         dispathGroup.leave()
                     }
                 }

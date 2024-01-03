@@ -21,7 +21,7 @@ class TypeManager: NSObject {
     // Save type infos to UserDefaults
     static func saveTypeInfosInstance(typeInfos: [TypeInfo]) {
         for typeInfo in typeInfos {
-            GogoLogger.instance.logger.info("save type info to UserDefaults, id: \(typeInfo.id)")
+            GogoLogger.logger.info("save type info to UserDefaults, id: \(typeInfo.id)")
             
             let key = keyForTypeInfo(id: typeInfo.id)
             
@@ -36,14 +36,14 @@ class TypeManager: NSObject {
                 }
             }
             catch {
-                GogoLogger.instance.logger.error("❗JSON encoding error: \(error.localizedDescription)")
+                GogoLogger.logger.error("❗JSON encoding error: \(error.localizedDescription)")
             }
         }
     }
     
     // Get type info from UserDefaults by id
     static func loadTypeInfoInstance(id: Int) -> TypeInfo? {
-        GogoLogger.instance.logger.info("get type info from UserDefaults, id: \(id)")
+        GogoLogger.logger.info("get type info from UserDefaults, id: \(id)")
         
         let key = keyForTypeInfo(id: id)
         if let jsonString = UserDefaults.standard.string(forKey: key) {
@@ -54,7 +54,7 @@ class TypeManager: NSObject {
                     return decodedType
                 }
                 catch {
-                    GogoLogger.instance.logger.error("❗JSON encoding error: \(error.localizedDescription)")
+                    GogoLogger.logger.error("❗JSON encoding error: \(error.localizedDescription)")
                 }
             }
         }
@@ -72,10 +72,10 @@ class TypeManager: NSObject {
         if let continuationKey = continuationKey, continuationKey.hasNext {
             paginationState = .continuing(continuationKey, .next)
             
-            GogoLogger.instance.logger.info("fetching type list, page: \(continuationKey.currentPage)")
+            GogoLogger.logger.info("fetching type list, page: \(continuationKey.currentPage)")
         }
         else {
-            GogoLogger.instance.logger.info("fetching type list, page: 0")
+            GogoLogger.logger.info("fetching type list, page: 0")
         }
         
         TypeManager.instance.loadingTypeInfos = true
@@ -83,7 +83,7 @@ class TypeManager: NSObject {
         PokemonAPI().pokemonService.fetchTypeList(paginationState: paginationState) { result in
             switch result {
             case .success(let pagedObject):
-                GogoLogger.instance.logger.info("fetching type list success")
+                GogoLogger.logger.info("fetching type list success")
                 
                 fetchTypeInfo(list: pagedObject.results) { typeInfos in
                     TypeManager.instance.typeInfos.append(contentsOf: typeInfos)
@@ -101,7 +101,7 @@ class TypeManager: NSObject {
                     }
                 }
             case .failure(let error):
-                GogoLogger.instance.logger.error("❗fetching type list failure: \(error)")
+                GogoLogger.logger.error("❗fetching type list failure: \(error)")
                 TypeManager.instance.loadingTypeInfos = false
                 callback?(error)
                 
@@ -114,10 +114,10 @@ class TypeManager: NSObject {
     
     // Fetching type infos by paged results
     private static func fetchTypeInfo(list: [PKMAPIResource<PKMType>]?, callback: @escaping (([TypeInfo]) -> Void)) {
-        GogoLogger.instance.logger.info("fetching type infos, count: \(list?.count ?? 0)")
+        GogoLogger.logger.info("fetching type infos, count: \(list?.count ?? 0)")
         
         guard let list = list, !list.isEmpty else {
-            GogoLogger.instance.logger.info("fetching type infos finished")
+            GogoLogger.logger.info("fetching type infos finished")
             callback([])
             return
         }
@@ -150,12 +150,12 @@ class TypeManager: NSObject {
                         }
                     }
                     else {
-                        GogoLogger.instance.logger.error("❗fetching type info failure: no pokemon with type")
+                        GogoLogger.logger.error("❗fetching type info failure: no pokemon with type")
                         dispathGroup.leave()
                     }
                     
                 case .failure(let error):
-                    GogoLogger.instance.logger.error("❗fetching type info failure: \(error)")
+                    GogoLogger.logger.error("❗fetching type info failure: \(error)")
                     dispathGroup.leave()
                 }
             }
@@ -163,22 +163,22 @@ class TypeManager: NSObject {
         
         dispathGroup.notify(queue: .main) {
             typeInfos.sort { $0.id < $1.id }
-            GogoLogger.instance.logger.info("fetching type infos finished")
+            GogoLogger.logger.info("fetching type infos finished")
             callback(typeInfos)
         }
     }
     
     // Fetching type info by id
     static func fetchType(id: Int, callback: @escaping ((PKMType?, Error?) -> Void)) {
-        GogoLogger.instance.logger.info("fetching type info, id: \(id)")
+        GogoLogger.logger.info("fetching type info, id: \(id)")
         
         PokemonAPI().pokemonService.fetchType(id) { result in
             switch result {
             case .success(let type):
-                GogoLogger.instance.logger.info("fetching type info success")
+                GogoLogger.logger.info("fetching type info success")
                 callback(type, nil)
             case .failure(let error):
-                GogoLogger.instance.logger.error("❗fetching type info failure: \(error)")
+                GogoLogger.logger.error("❗fetching type info failure: \(error)")
                 callback(nil, error)
             }
         }
@@ -186,7 +186,7 @@ class TypeManager: NSObject {
     
     // Fetching damage relations
     static func fetchDamageRelations(damageRelations: PKMTypeRelations?, callback: @escaping (([[TypeInfo]]?) -> Void)) {
-        GogoLogger.instance.logger.info("fetching damage relations")
+        GogoLogger.logger.info("fetching damage relations")
         
         guard let damageRelations = damageRelations else {
             callback(nil)
@@ -203,7 +203,7 @@ class TypeManager: NSObject {
         func checkFetchFinish() {
             if noDamageTo != nil && halfDamageTo != nil && doubleDamageTo != nil &&
                 noDamageFrom != nil && halfDamageFrom != nil && doubleDamageFrom != nil {
-                GogoLogger.instance.logger.info("fetching damage relations finished")
+                GogoLogger.logger.info("fetching damage relations finished")
                 callback([noDamageTo!, halfDamageTo!, doubleDamageTo!, noDamageFrom!, halfDamageFrom!, doubleDamageFrom!])
             }
         }

@@ -89,7 +89,7 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        GogoLogger.instance.logger.info("Hi Pokémon Trainer")
+        GogoLogger.logger.info("Hi Pokémon Trainer")
     }
 }
 
