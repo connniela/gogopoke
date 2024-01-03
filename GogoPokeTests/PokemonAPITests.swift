@@ -19,37 +19,60 @@ final class PokemonAPITests: XCTestCase {
     }
     
     func testFetchPokemonList() {
+        let expectation = expectation(description: "testFetchPokemonList")
+        
         PokeManager.fetchPokemonList(reload: true) { error in
-            if case _ = error {
-                XCTFail("testFetchPokemon failed")
+            if let _ = error {
+                XCTFail("testFetchPokemonList failed")
             }
-            XCTAssertTrue(PokeManager.instance.pokemonInfos.isEmpty, "testFetchPokemonList failed")
+            
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 5.0)
     }
     
     func testFetchPokemon() {
+        let expectation = expectation(description: "testFetchPokemon")
+        
         PokeManager.fetchPokemon(id: 1) { pokemon, pokemonInfo, error in
-            if case _ = error {
+            if let _ = error {
                 XCTFail("testFetchPokemon failed")
             }
+            XCTAssertFalse(pokemon == nil, "testFetchPokemon failed")
+            
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 5.0)
     }
     
     func testFetchTypeList() {
+        let expectation = expectation(description: "testFetchTypeList")
+        
         TypeManager.fetchTypeList { error in
-            if case _ = error {
+            if let _ = error {
                 XCTFail("testFetchTypeList failed")
             }
-            XCTAssertTrue(TypeManager.instance.typeInfos.isEmpty, "testFetchTypeList failed")
+            
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 5.0)
     }
     
     func testFetchType() {
+        let expectation = expectation(description: "testFetchTypeList")
+        
         TypeManager.fetchType(id: 1) { type, error in
-            if case _ = error {
-                XCTFail("testFetchType failed")
+            if let _ = error {
+                XCTFail("testFetchTypeList failed")
             }
+            
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 5.0)
     }
 
 }
