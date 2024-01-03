@@ -37,7 +37,7 @@ class TypePokemonViewModel {
         return nil
     }
     
-    var pokemonInfos: [PokemonInfo] = []
+    private(set) var pokemonInfos: [PokemonInfo] = []
     
     func initLoadData() {
         if !TypeManager.instance.typeInfos.isEmpty {

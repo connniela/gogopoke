@@ -54,7 +54,7 @@ class TypeChartViewModel {
         }
     }
     
-    var secondTypeInfos: [TypeInfo] = []
+    private(set) var secondTypeInfos: [TypeInfo] = []
     
     var selectedSecondTypeIndex: Int = 0 {
         didSet {
@@ -62,11 +62,11 @@ class TypeChartViewModel {
         }
     }
     
-    var selectedTypeInfo: TypeInfo?
+    private(set) var selectedTypeInfo: TypeInfo?
     
-    var selectedSecondTypeInfo: TypeInfo?
+    private(set) var selectedSecondTypeInfo: TypeInfo?
     
-    var pokemonInfos: [PokemonInfo] = []
+    private(set) var pokemonInfos: [PokemonInfo] = []
     
     func initLoadData() {
         if !TypeManager.instance.typeInfos.isEmpty {
@@ -88,7 +88,7 @@ class TypeChartViewModel {
         }
     }
     
-    @objc func refreshTypeInfos() {
+    @objc private func refreshTypeInfos() {
         if !typeInfos.isEmpty {
             delegate?.typeChartViewModelDidLoadTypeInfos()
             selectedTypeIndex = 0

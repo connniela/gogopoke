@@ -31,9 +31,9 @@ class PokemonDetailViewModel {
     
     var isMyPokemon: Bool = false
     
-    var pokemon: PKMPokemon?
+    private(set) var pokemon: PKMPokemon?
     
-    var clainLink: PKMClainLink?
+    private(set) var clainLink: PKMClainLink?
     
     func fetchPokemon(id: Int) {
         PokeManager.fetchPokemon(id: id) { [weak self] pokemon, pokemonInfo, error in

@@ -8,21 +8,19 @@
 import Foundation
 import PokemonAPI
 
-class PokeManager: NSObject {
+class PokeManager {
     
-    var myPokemonInfos: [PokemonInfo] = []
+    private(set) var myPokemonInfos: [PokemonInfo] = []
     
-    var pokemonInfos: [PokemonInfo] = []
+    private(set) var pokemonInfos: [PokemonInfo] = []
     
-    var continuationKey: PKMPagedObject<PKMPokemon>?
-    
-    var nextKey: String?
+    private(set) var continuationKey: PKMPagedObject<PKMPokemon>?
     
     static let instance = PokeManager()
     
     static let MyPokemonListNeedUpdateNotification: String = "PokeManager_MyPokemonListNeedUpdateNotification"
     
-    static let MyPokemonIdListKey: String = "PokeManager_MyPokemonIdList"
+    private static let MyPokemonIdListKey: String = "PokeManager_MyPokemonIdList"
     
     // Check if pokemon is owned
     static func isMyPokemon(id: Int) -> Bool {

@@ -8,11 +8,11 @@
 import Foundation
 import PokemonAPI
 
-class TypeManager: NSObject {
+class TypeManager {
     
-    var typeInfos: [TypeInfo] = []
+    private(set) var typeInfos: [TypeInfo] = []
     
-    var loadingTypeInfos: Bool = false
+    private(set) var loadingTypeInfos: Bool = false
     
     static let instance = TypeManager()
     
