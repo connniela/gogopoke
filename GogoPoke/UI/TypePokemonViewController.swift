@@ -243,7 +243,7 @@ extension TypePokemonViewController: UICollectionViewDataSource, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        let bottomPadding = AppDelegate.instance.keyWindow?.safeAreaInsets.bottom ?? 0
+        let bottomPadding = AppDelegate.keyWindow?.safeAreaInsets.bottom ?? 0
         return .init(top: 12, left: 20, bottom: bottomPadding + 12, right: 20)
     }
     
