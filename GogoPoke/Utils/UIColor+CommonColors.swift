@@ -56,7 +56,7 @@ extension UIColor {
                                      UIColor(hex: 0x6F35FC),
                                      UIColor(hex: 0x705746),
                                      UIColor(hex: 0xD685AD)]
-        if id < typeColors.count {
+        if id >= 0 && id < typeColors.count {
             return typeColors[id]
         }
         return .clear
